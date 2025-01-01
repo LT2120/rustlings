@@ -1,3 +1,4 @@
+
 #[derive(Debug, PartialEq, Eq)]
 enum DivisionError {
     // Example: 42 / 0
@@ -11,49 +12,33 @@ enum DivisionError {
 // TODO: Calculate `a` divided by `b` if `a` is evenly divisible by `b`.
 // Otherwise, return a suitable error.
 fn divide(a: i64, b: i64) -> Result<i64, DivisionError> {
-    if b==0{
-        Err(DivisionError::DivideByZero)
+    if b == 0 {
+        return Err(DivisionError::DivideByZero);
     }
-    else if a%b==0{
-        Ok(a/b)
-    }else{
-        Err(DivisionError::NotDivisible(NotDivisibleError{
-            dividend: a,
-            divisor: b,
-        }))
+    if a == i64::MIN && b == -1 {
+        return Err(DivisionError::IntegerOverflow);
     }
+    if a % b != 0 {
+        return Err(DivisionError::NotDivisible);
+    }
+    
+    Ok(a / b)
 }
 
 // TODO: Add the correct return type and complete the function body.
 // Desired output: `Ok([1, 11, 1426, 3])`
-fn result_with_list() {
+fn result_with_list() ->Result<Vec<i64>, DivisionError> {
     let numbers = [27, 297, 38502, 81];
-    // let division_results = numbers.into_iter().map(|n| divide(n, 27));
-    let mut buf = Vec::new();
-
-    for n in numbers {
-        match divide(n, 27) {
-            Ok(r) => buf.push(r),
-            Err(e) => return Err(e),
-        }
-    }
-    Ok(buf)
+    let division_results = numbers.into_iter().map(|n| divide(n, 27)).collect();
+    division_results
 }
 
 // TODO: Add the correct return type and complete the function body.
 // Desired output: `[Ok(1), Ok(11), Ok(1426), Ok(3)]`
-fn list_of_results() {
+fn list_of_results() -> Vec<Result<i64, DivisionError>> {
     let numbers = [27, 297, 38502, 81];
-    // let division_results = numbers.into_iter().map(|n| divide(n, 27));
-    let mut buf = Vec::new();
-
-    for n in numbers {
-        match divide(n, 27) {
-            Ok(r) => buf.push(Ok(r)),
-            Err(e) => buf.push(Err(e)),
-        }
-    }
-    buf
+    let division_results = numbers.into_iter().map(|n| divide(n, 27)).collect();
+    division_results
 }
 
 fn main() {

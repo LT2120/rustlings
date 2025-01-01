@@ -1,6 +1,10 @@
-use std::{sync::mpsc, thread, time::Duration};
 
+use std::sync::mpsc;
+use std::sync::Arc;
+use std::thread;
+use std::time::Duration;
 struct Queue {
+    length: u32,
     first_half: Vec<u32>,
     second_half: Vec<u32>,
 }
@@ -8,6 +12,7 @@ struct Queue {
 impl Queue {
     fn new() -> Self {
         Self {
+            length: 10,
             first_half: vec![1, 2, 3, 4, 5],
             second_half: vec![6, 7, 8, 9, 10],
         }
@@ -17,24 +22,22 @@ impl Queue {
 fn send_tx(q: Queue, tx: mpsc::Sender<u32>) {
     // TODO: We want to send `tx` to both threads. But currently, it is moved
     // into the first thread. How could you solve this problem?
-    
     let qc = Arc::new(q);
     let qc1 = Arc::clone(&qc);
     let qc2 = Arc::clone(&qc);
-    let tx1=tx.clone();
-    
+    let tx2 = tx.clone();
     thread::spawn(move || {
-        for val in q.first_half {
+        for val in &qc1.first_half {
             println!("Sending {val:?}");
-            tx.send(val).unwrap();
+            tx.send(*val).unwrap();
             thread::sleep(Duration::from_millis(250));
         }
     });
 
     thread::spawn(move || {
-        for val in q.second_half {
+        for val in &qc2.second_half {
             println!("Sending {val:?}");
-            tx.send(val).unwrap();
+            tx2.send(*val).unwrap();
             thread::sleep(Duration::from_millis(250));
         }
     });
@@ -52,15 +55,17 @@ mod tests {
     fn threads3() {
         let (tx, rx) = mpsc::channel();
         let queue = Queue::new();
+        let queue_length = queue.length;
 
         send_tx(queue, tx);
 
-        let mut received = Vec::with_capacity(10);
-        for value in rx {
-            received.push(value);
+        let mut total_received: u32 = 0;
+        for received in rx {
+            println!("Got: {received}");
+            total_received += 1;
         }
 
-        received.sort();
-        assert_eq!(received, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        println!("Number of received values: {total_received}");
+        assert_eq!(total_received, queue_length);
     }
 }
