@@ -28,6 +28,8 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
     // `map` is a hash map with `String` keys and `Progress` values.
     // map = { "variables1": Complete, "from_str": None, … }
+    let mut count=map.iter().filter(|a| *a.1==value).count();
+    count
 }
 
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
@@ -48,6 +50,20 @@ fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Pr
     // `collection` is a slice of hash maps.
     // collection = [{ "variables1": Complete, "from_str": None, … },
     //               { "variables2": Complete, … }, … ]
+    let mut my_map1 = collection[0].clone();
+    let mut my_map2 = collection[1].clone();
+	// 调用extend方法，将my_map1转换为一个迭代器，并将其键值对添加到my_map2中
+    // my_map2.extend(my_map1.into_iter());
+	// 与上一个相同
+    let mut count = my_map2
+        .iter()
+        .filter(|v| *v.1 == value)
+        .count();
+    count += my_map1
+        .iter()
+        .filter(|v| *v.1 == value)
+        .count();
+    count
 }
 
 fn main() {

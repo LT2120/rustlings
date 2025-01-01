@@ -28,4 +28,5 @@ fn main() {
         tokens -= cost;
         println!("You now have {tokens} tokens.");
     }
+    Ok(())
 }
