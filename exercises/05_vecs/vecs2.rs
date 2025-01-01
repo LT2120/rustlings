@@ -1,4 +1,4 @@
-fn vec_loop(mut v: Vec<i32>) -> Vec<i32> {
+fn vec_loop(input: &[i32]) -> Vec<i32> {
     let mut output = Vec::new();
 
     for element in input {

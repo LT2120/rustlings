@@ -24,9 +24,10 @@ fn main() {
 
     if cost > tokens {
         println!("You can't afford that many!");
+        Ok(())
     } else {
         tokens -= cost;
         println!("You now have {tokens} tokens.");
+        Ok(())
     }
-    Ok(())
 }
