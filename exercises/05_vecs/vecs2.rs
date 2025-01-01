@@ -1,12 +1,13 @@
 fn vec_loop(mut v: Vec<i32>) -> Vec<i32> {
-    for element in v.iter_mut() {
-        // TODO: Fill this up so that each element in the Vec `v` is
-        // multiplied by 2.
-        *element=*element*2;
+    let mut output = Vec::new();
+
+    for element in input {
+        // TODO: Multiply each element in the `input` slice by 2 and push it to
+        // the `output` vector.
+        output.push(element * 2);
     }
 
-    // At this point, `v` should be equal to [4, 8, 12, 16, 20].
-    v
+    output
 }
 
 fn vec_map_example(input: &[i32]) -> Vec<i32> {
