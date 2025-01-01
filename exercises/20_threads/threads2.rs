@@ -2,7 +2,7 @@
 // work. But this time, the spawned threads need to be in charge of updating a
 // shared value: `JobStatus.jobs_done`
 
-use std::{sync::Arc, sync::Mutex,  time::Duration};
+use std::{sync::Arc, sync::Mutex, thread, time::Duration};
 
 struct JobStatus {
     jobs_done: u32,
@@ -20,6 +20,7 @@ fn main() {
 
             // TODO: You must take an action before you update a shared value.
             status_shared.lock().unwrap().jobs_done += 1;
+            // status_shared.jobs_done += 1;
         });
         handles.push(handle);
     }
@@ -30,5 +31,5 @@ fn main() {
     }
 
     // TODO: Print the value of `JobStatus.jobs_done`.
-    println!("Jobs done: {}", status.lock().unwrap().jobs_completed);
+    println!("Jobs done: {}", status.lock().unwrap().jobs_done );
 }
